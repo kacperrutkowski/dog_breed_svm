@@ -35,10 +35,7 @@ def preprocess_data(path_to_data = "data/Images", img_size = 64, n_class = 10, n
 
     X = X.reshape(X.shape[0], -1)
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
-    return X_scaled, y
+    return X, y
 
 
 
