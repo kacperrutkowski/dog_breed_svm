@@ -48,7 +48,7 @@ def crop_image(img_path, xml_path, pad = 0):
 
     return img
 
-def preprocess_data(path_to_data = "data", img_size = 64, n_class = 10, n_samples_in_class = 100, crop = False, pad = 0, flatten = True):
+def preprocess_data(path_to_data = "data", img_size = 64, n_class = 10, n_samples_in_class = 150, crop = False, pad = 0, flatten = True):
     BASE_DIR = Path(__file__).resolve().parent.parent
     images_dir = BASE_DIR / path_to_data / "Images"
     annotations_dir = BASE_DIR / path_to_data / "Annotation"
@@ -94,9 +94,27 @@ def preprocess_data(path_to_data = "data", img_size = 64, n_class = 10, n_sample
     return X, y
 
 
+def expand_dataset(X, y):
+    """
+    Adds mirror images to the vector with datapoints. The images in X cannot be flatten.
+    :param X: vector with datapoints that are images
+    :param y: tags for each image
+    :return: (X,y) - expanded vectors with datapoints and tags
+    """
+    X_mirror = []
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-images_dir = BASE_DIR / "data" / "Images" /'n02085620-Chihuahua'
+    for img in X:
+        mirror_img = []
+        for row in img:
+            mirror_img.append(row[::-1])
+        mirror_img = np.array(mirror_img)
+        X_mirror.append(mirror_img)
 
+    X_mirror = np.array(X_mirror)
+
+    X = np.concatenate([X, X_mirror], axis = 0)
+    y = np.concatenate([y, y], axis = 0)
+
+    return X, y
 
 
